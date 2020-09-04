@@ -32,7 +32,6 @@ public class BinarySearchTree {
 
         Fraction outputFraction = null;
 
-        // maybe do a while true then when it finds the numbers that satisfy the equation, return that
         while (fractionsInTree.size() < 10) {
             for (int i = 0; i <= Math.pow(2, L) - 1; i++) {
                 Fraction fraction = new Fraction(fractions.get(2 * i).getA() + fractions.get(2 * i + 1).getA(), fractions.get(2 * i).getB() + fractions.get(2 * i + 1).getB());
@@ -40,16 +39,10 @@ public class BinarySearchTree {
                 fractions.add(2 * i + 1, fraction);
                 fractionsInTree.add(fraction);
 
-//                M = new BigInteger(String.valueOf(m));
-//                N = new BigInteger(String.valueOf(n));
 //                Node fractionNode = new Node();
 //                fractionNode.setFraction(fraction);
 //                insert(fractionNode);
-                // check the fractions that are only added in this level of the tree instead
-                // of going through whole tree like what is being done down below when findFractions
-                // is called
-                // maybe have another method that does this and then resets the fractionsInTree so
-                // won't remember the past fractions
+
             }
             L++;
 //            System.out.println("Finished fractions: " + fractions);
@@ -58,10 +51,6 @@ public class BinarySearchTree {
             if (outputFraction != null) {
                 break;
             }
-//            outputFraction = inOrderTreeWalk(root);
-//            if (outputFraction != null) {
-//                break;
-//            }
 
         }
         return outputFraction;
@@ -88,30 +77,6 @@ public class BinarySearchTree {
         fractionsInTree.clear();
         return null;
     }
-
-//    public Fraction findFraction(int m, int n) {
-//        BigInteger M = new BigInteger(String.valueOf(m));
-//        BigInteger N = new BigInteger(String.valueOf(n));
-//        for (int i = 0; i < fractions.size(); i++) {
-//            BigInteger asquared = new BigInteger(String.valueOf(fractions.get(i).getA()));
-//            asquared = asquared.pow(2);
-//            BigInteger bsquared = new BigInteger(String.valueOf(fractions.get(i).getB()));
-//            BigInteger b = bsquared;
-//            bsquared = bsquared.pow(2);
-//
-//            BigInteger equation = N.multiply(asquared).subtract(M.multiply(bsquared));
-//            equation = equation.abs();
-//
-////            System.out.println(N + "^" + asquared + " - " + M + "^" + bsquared + " < " + b);
-////            System.out.println(equation + " < " + b);
-//
-//            if (equation.compareTo(b) < 0) {
-//                return new Fraction(fractions.get(i).getA(), fractions.get(i).getB());
-//            }
-//        }
-//        return null;
-//    }
-
 
     public void insert(Node z) {
 
@@ -140,7 +105,6 @@ public class BinarySearchTree {
 
     }
 
-    // have it return a Fraction and if its not null exit out of the loop
     public void inOrderTreeWalk(Node node) {
         // use this function to compare fractions
         if (node != null) {
@@ -149,29 +113,6 @@ public class BinarySearchTree {
             inOrderTreeWalk(node.getRight());
         }
     }
-
-//    public Fraction inOrderTreeWalk(Node node) {
-//        // use this function to compare fractions
-//        if (node != null) {
-//            System.out.println("in here");
-//            inOrderTreeWalk(node.getLeft());
-////            System.out.println(node.getFraction());
-//            BigInteger asquared = new BigInteger(String.valueOf(node.getFraction().getA()));
-//            asquared = asquared.pow(2);
-//            BigInteger bsquared = new BigInteger(String.valueOf(node.getFraction().getB()));
-//            BigInteger b = bsquared;
-//            bsquared = bsquared.pow(2);
-//
-//            BigInteger equation = N.multiply(asquared).subtract(M.multiply(bsquared));
-//            equation = equation.abs();
-//
-//            if (equation.compareTo(b) < 0) {
-//                return new Fraction(node.getFraction().getA(), node.getFraction().getB());
-//            }
-//            inOrderTreeWalk(node.getRight());
-//        }
-//        return null;
-//    }
 
     public Node getRoot() {
         return root;
