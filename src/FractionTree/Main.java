@@ -2,6 +2,7 @@ package FractionTree;
 import java.io.File;
 import java.io.IOException;
 import java.util.Scanner;
+import java.io.*;
 
 public class Main {
 
@@ -9,7 +10,9 @@ public class Main {
 
         try {
 
-            Scanner inputFile = new Scanner(new File("input3.txt"));
+            Scanner inputFile = new Scanner(new File("input.txt"));
+
+            PrintWriter writer = new PrintWriter(new FileWriter("output.txt"));
 
             int m = inputFile.nextInt();
 
@@ -20,6 +23,10 @@ public class Main {
 
             System.out.println("a: " + outputFraction.getA());
             System.out.println("b: " + outputFraction.getB());
+
+            writer.println(outputFraction.getA());
+            writer.println(outputFraction.getB());
+            writer.close();
 
         }
 
