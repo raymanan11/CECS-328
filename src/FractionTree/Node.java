@@ -16,6 +16,7 @@ public class Node {
         left = null;
         right = null;
         parent = null;
+
     }
 
     public boolean fractionLessThan(Node node) {

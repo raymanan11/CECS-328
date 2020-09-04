@@ -9,7 +9,7 @@ public class Main {
 
         try {
 
-            Scanner inputFile = new Scanner(new File("input1.txt"));
+            Scanner inputFile = new Scanner(new File("input3.txt"));
 
             int m = inputFile.nextInt();
 
@@ -21,7 +21,6 @@ public class Main {
             System.out.println("a: " + outputFraction.getA());
             System.out.println("b: " + outputFraction.getB());
 
-            bst.inOrderTreeWalk(bst.getRoot());
         }
 
         catch(IOException excpt) {
