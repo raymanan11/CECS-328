@@ -4,44 +4,26 @@ import java.math.BigInteger;
 
 public class Fraction {
 
-    private int a;
-    private int b;
+    private BigInteger a;
+    private BigInteger b;
 
     private BigInteger equation;
 
     public Fraction() {
-        a = 0;
-        b = 0;
+        a = new BigInteger(String.valueOf(0));
+        b = new BigInteger(String.valueOf(0));
     }
 
-    public Boolean calculateEquation(BigInteger M, BigInteger N) {
-        BigInteger asquared = new BigInteger(String.valueOf(a));
-        asquared = asquared.pow(2);
-        BigInteger bsquared = new BigInteger(String.valueOf(b));
-        BigInteger b = bsquared;
-        bsquared = bsquared.pow(2);
-
-        equation = N.multiply(asquared).subtract(M.multiply(bsquared));
-        equation = equation.abs();
-
-        if (equation.compareTo(b) < 0) {
-            return true;
-        }
-        else {
-            return false;
-        }
-    }
-
-    public Fraction(int numerator, int denominator) {
+    public Fraction(BigInteger numerator, BigInteger denominator) {
         this.a = numerator;
         this.b = denominator;
     }
 
-    public int getA() {
+    public BigInteger getA() {
         return a;
     }
 
-    public int getB() {
+    public BigInteger getB() {
         return b;
     }
 
@@ -49,4 +31,5 @@ public class Fraction {
     public String toString() {
         return a + "/" + b;
     }
+
 }

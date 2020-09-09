@@ -19,35 +19,35 @@ public class Node {
 
     }
 
-    public boolean fractionLessThan(Node node) {
-        if (this.fraction.getB() == node.getFraction().getB()) {
-            if (this.fraction.getA() < node.getFraction().getA()) {
-                return true;
-            }
-            else if (this.fraction.getA() >= node.getFraction().getA()) {
-                return false;
-            }
-        }
-        else {
-            BigInteger fractionOneNum = new BigInteger(String.valueOf(this.fraction.getA()));
-            BigInteger fractionTwoDem = new BigInteger(String.valueOf(node.getFraction().getB()));
-
-            BigInteger adjustedOneNum = fractionOneNum.multiply(fractionTwoDem);
-
-            BigInteger fractionTwoNum = new BigInteger(String.valueOf(node.getFraction().getA()));
-            BigInteger fractionOneDem = new BigInteger(String.valueOf(this.fraction.getB()));
-
-            BigInteger adjustedTwoNum = fractionTwoNum.multiply(fractionOneDem);
-
-            if (adjustedOneNum.compareTo(adjustedTwoNum) < 0) {
-                return true;
-            }
-            else {
-                return false;
-            }
-        }
-        return false;
-    }
+//    public boolean fractionLessThan(Node node) {
+//        if (this.fraction.getB() == node.getFraction().getB()) {
+//            if (this.fraction.getA() < node.getFraction().getA()) {
+//                return true;
+//            }
+//            else if (this.fraction.getA() >= node.getFraction().getA()) {
+//                return false;
+//            }
+//        }
+//        else {
+//            BigInteger fractionOneNum = new BigInteger(String.valueOf(this.fraction.getA()));
+//            BigInteger fractionTwoDem = new BigInteger(String.valueOf(node.getFraction().getB()));
+//
+//            BigInteger adjustedOneNum = fractionOneNum.multiply(fractionTwoDem);
+//
+//            BigInteger fractionTwoNum = new BigInteger(String.valueOf(node.getFraction().getA()));
+//            BigInteger fractionOneDem = new BigInteger(String.valueOf(this.fraction.getB()));
+//
+//            BigInteger adjustedTwoNum = fractionTwoNum.multiply(fractionOneDem);
+//
+//            if (adjustedOneNum.compareTo(adjustedTwoNum) < 0) {
+//                return true;
+//            }
+//            else {
+//                return false;
+//            }
+//        }
+//        return false;
+//    }
 
     public void setLeft(Node left) {
         this.left = left;
