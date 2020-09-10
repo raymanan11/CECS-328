@@ -2,47 +2,51 @@ package FractionTree;
 import java.io.File;
 import java.io.IOException;
 import java.math.BigInteger;
-import java.math.BigDecimal;
-import java.math.MathContext;
 import java.util.Scanner;
 import java.io.*;
 
 public class Main {
 
-    static void buildTree(Fraction left, Fraction right, BigDecimal sqrtM, BigDecimal sqrtN, BigDecimal M, BigDecimal N, PrintWriter outputFile) {
+    private static BigInteger M;
+    private static BigInteger N;
 
-        BigInteger numerator = left.getA().add(right.getA());
-        BigInteger denominator = left.getB().add(right.getB());
+    private static BigInteger outputFileNumerator;
+    private static BigInteger outputFileDenominator;
 
-        BigDecimal BDnumerator = new BigDecimal(numerator);
-        BigDecimal BDdenominator = new BigDecimal(denominator);
+    static void buildTree(Fraction left, Fraction right) {
+
+        BigInteger numerator = left.getNumerator().add(right.getNumerator());
+        BigInteger denominator = left.getDenominator().add(right.getDenominator());
 
         Fraction fraction = new Fraction(numerator, denominator);
 
-        BigDecimal compare1 = sqrtM.multiply(BDdenominator);
-        BigDecimal compare2 = sqrtN.multiply(BDnumerator);
+        BigInteger aSquared = numerator.multiply(numerator);
+        BigInteger bSquared = denominator.multiply(denominator);
 
-        BigDecimal asquared = BDnumerator;
-        asquared = asquared.pow(2);
-        BigDecimal bsquared = BDdenominator;
-        BigDecimal b = bsquared;
-        bsquared = bsquared.pow(2);
+        BigInteger equation = (N.multiply(aSquared)).subtract(M.multiply(bSquared));
+        BigInteger absEquation = equation.abs();
 
-        BigDecimal equation = N.multiply(asquared).subtract(M.multiply(bsquared));
-        equation = equation.abs();
+        BigInteger negateEquation = equation.negate();
 
-        if (equation.compareTo(b) < 0) {
-            outputFile.println(numerator);
-            outputFile.println(denominator);
-            outputFile.close();
+        if (absEquation.compareTo(denominator) < 0) {
+            outputFileNumerator = numerator;
+            outputFileDenominator = denominator;
+            return;
         }
 
-        else if (compare1.compareTo(compare2) < 0) {
-            buildTree(left, fraction, sqrtM, sqrtN, M, N, outputFile);
+        Fraction l;
+        Fraction r;
+
+        if (negateEquation.compareTo(absEquation) == 0) {
+            l = fraction;
+            r = right;
         }
-        else if (compare1.compareTo(compare2) > 0) {
-            buildTree(fraction, right, sqrtM, sqrtN, M, N, outputFile);
+        else {
+            l = left;
+            r = fraction;
         }
+
+        buildTree(l, r);
 
     }
 
@@ -50,20 +54,24 @@ public class Main {
 
         try {
 
-            Scanner inputFile = new Scanner(new File("input7.txt"));
+            Scanner inputFile = new Scanner(new File("input4.txt"));
 
             PrintWriter outputFile = new PrintWriter(new FileWriter("output.txt"));
 
-            BigDecimal m = new BigDecimal(inputFile.next());
-            BigDecimal n = new BigDecimal(inputFile.next());
+            BigInteger m = new BigInteger(inputFile.next());
+            BigInteger n = new BigInteger(inputFile.next());
 
-            BigDecimal sqrtM = m.sqrt(new MathContext(200));
-            BigDecimal sqrtN = n.sqrt(new MathContext(200));
+            M = m;
+            N = n;
 
             Fraction startFraction1 = new Fraction(new BigInteger(String.valueOf(0)), new BigInteger(String.valueOf(1)));
             Fraction startFraction2 = new Fraction(new BigInteger(String.valueOf(1)), new BigInteger(String.valueOf(0)));
 
-            buildTree(startFraction1, startFraction2, sqrtM, sqrtN, m, n, outputFile);
+            buildTree(startFraction1, startFraction2);
+
+            outputFile.println(outputFileNumerator);
+            outputFile.println(outputFileDenominator);
+            outputFile.close();
 
         }
 
