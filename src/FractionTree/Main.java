@@ -13,30 +13,24 @@ public class Main {
     private static BigInteger outputFileNumerator;
     private static BigInteger outputFileDenominator;
 
-    static void buildTree(Fraction left, Fraction right) {
+    private static Fraction left;
+    private static Fraction right;
 
-        // add numerator from left and right fractions
+    static void buildTree() {
+
         BigInteger numerator = left.getNumerator().add(right.getNumerator());
-        // add denominator from left and right fractions
         BigInteger denominator = left.getDenominator().add(right.getDenominator());
 
-        // create fraction object for newly added numerator and denominator
         Fraction fraction = new Fraction(numerator, denominator);
 
-        // get asquared
         BigInteger aSquared = numerator.multiply(numerator);
-        // get bsquared
         BigInteger bSquared = denominator.multiply(denominator);
 
-        // equation that is used to determine whether to go left or right depending if negative or positive
         BigInteger equation = (N.multiply(aSquared)).subtract(M.multiply(bSquared));
-        // absolute value of equation to use for base case so you know when to stop and output to output fle
         BigInteger absEquation = equation.abs();
 
-        // negating equatio so that this can be used to tell whether equation is positive or negative
         BigInteger negateEquation = equation.negate();
 
-        // if |Na^2 - Mb^2| < b then that means we got a and b and can output it to output file
         if (absEquation.compareTo(denominator) < 0) {
             System.out.println(numerator);
             System.out.println(denominator);
@@ -45,21 +39,14 @@ public class Main {
             return;
         }
 
-        Fraction l;
-        Fraction r;
-
-        // if the equation is negative then we go right
         if (negateEquation.compareTo(absEquation) == 0) {
-            l = fraction;
-            r = right;
+            left = fraction;
         }
-        // else we go left
         else {
-            l = left;
-            r = fraction;
+            right = fraction;
         }
 
-        buildTree(l, r);
+        buildTree();
 
     }
 
@@ -82,7 +69,10 @@ public class Main {
             Fraction startFraction1 = new Fraction(new BigInteger(String.valueOf(0)), new BigInteger(String.valueOf(1)));
             Fraction startFraction2 = new Fraction(new BigInteger(String.valueOf(1)), new BigInteger(String.valueOf(0)));
 
-            buildTree(startFraction1, startFraction2);
+            left = startFraction1;
+            right = startFraction2;
+
+            buildTree();
 
             // write a and b to output file
             outputFile.println(outputFileNumerator);
