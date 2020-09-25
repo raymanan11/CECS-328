@@ -10,60 +10,15 @@ import java.util.Scanner;
 
 public class Main {
 
-    private static Scanner inputFile;
-    private static ArrayList<nNumber> nNumbers = new ArrayList<>();
-    private static ArrayList<GCD> gcdProblems = new ArrayList<>();
-
-    private static boolean reachedEuclidian;
-
-    static void getScore(GCD gcdProblem) {
-        // add the base case
-        if (gcdProblem.getA().compareTo(BigInteger.ZERO) == 0 || gcdProblem.getB().compareTo(BigInteger.ZERO) == 0 ||
-                (gcdProblem.getA().compareTo(BigInteger.ZERO) == 0 && gcdProblem.getB().compareTo(BigInteger.ZERO) == 0)) {
-            return;
-        }
-
-        for (int i = 0; i < nNumbers.size(); i++) {
-
-            nNumber nNumber = nNumbers.get(i);
-            BigInteger nNumberBigInt = nNumber.getnNumberBigInt();
-
-            // if a AND b are divisible by an nNumber
-            if (gcdProblem.getA().remainder(nNumberBigInt).compareTo(BigInteger.ZERO) == 0 && gcdProblem.getB().remainder(nNumberBigInt).compareTo(BigInteger.ZERO) == 0) {
-                nNumbers.get(i).addScore(2);
-                // parameters from constructor have to be a string
-                getScore(new GCD(gcdProblem.getA().divide(nNumberBigInt), gcdProblem.getB().divide(nNumberBigInt)));
-                return;
-            }
-            else if (gcdProblem.getA().compareTo(BigInteger.ONE) == 0 || gcdProblem.getB().compareTo(BigInteger.ONE) == 0 && reachedEuclidian) {
-                return;
-            }
-            // if a is divisible by an nNumber and b isn't
-            else if (gcdProblem.getA().remainder(nNumberBigInt).compareTo(BigInteger.ZERO) == 0 && gcdProblem.getB().remainder(nNumberBigInt).compareTo(BigInteger.ZERO) != 0) {
-                nNumbers.get(i).addScore(1);
-                getScore(new GCD(gcdProblem.getA().divide(nNumberBigInt), gcdProblem.getB()));
-                return;
-            }
-            // if b is divisible by an nNumber and a isn't
-            else if (gcdProblem.getB().remainder(nNumberBigInt).compareTo(BigInteger.ZERO) == 0 && gcdProblem.getA().remainder(nNumberBigInt).compareTo(BigInteger.ZERO) != 0) {
-                nNumbers.get(i).addScore(1);
-                getScore(new GCD(gcdProblem.getB().divide(nNumberBigInt), gcdProblem.getA()));
-                return;
-            }
-        }
-
-        // then add Euclidian's rule
-        reachedEuclidian = true;
-        BigInteger max = gcdProblem.getA().max(gcdProblem.getB());
-        BigInteger min = gcdProblem.getA().min(gcdProblem.getB());
-        getScore(new GCD(max.subtract(min), min));
-    }
-
     public static void main(String[] args) {
 
         try {
 
-            inputFile = new Scanner(new File("input2.txt"));
+            ArrayList<nNumber> nNumberz = new ArrayList<>();
+            ArrayList<GCD> gcdProblems = new ArrayList<>();
+            Scanner inputFile;
+
+            inputFile = new Scanner(new File("input4.txt"));
 
             PrintWriter outputFile = new PrintWriter(new FileWriter("output.txt"));
 
@@ -72,29 +27,69 @@ public class Main {
             // add the n numbers into an ArrayList
             for (int i = 0; i < numOfNNumbers; i++) {
                 nNumber number = new nNumber(inputFile.nextInt(), 0);
-                nNumbers.add(number);
+                nNumberz.add(number);
             }
 
             inputFile.nextLine();
 
-            // take remaining lines in file and add GCD problems into ArrayList
             while (inputFile.hasNextLine()) {
                 String s = inputFile.nextLine();
                 String[] arr = s.split(" ");
-                GCD gcdProblem = new GCD(new BigInteger(arr[0]), new BigInteger(arr[1]));
-                gcdProblems.add(gcdProblem);
+                BigInteger a = new BigInteger(arr[0]);
+                BigInteger b = new BigInteger(arr[1]);
+                gcdProblems.add(new GCD(a, b));
             }
 
-            for (GCD problem : gcdProblems) {
-                reachedEuclidian = false;
-                getScore(problem);
+            int size = nNumberz.size();
+
+            BigInteger a;
+            BigInteger b;
+
+            long start, end;
+
+            start = System.currentTimeMillis();
+
+            for (GCD gcdProblem : gcdProblems) {
+                a = gcdProblem.a;
+                b = gcdProblem.b;
+
+                for (int i = 0; i < size; i++) {
+                    nNumber nNumber = nNumberz.get(i);
+                    BigInteger nNumberBigInt = nNumber.nNumberBigInt;
+
+                    while (true) {
+                        if (a.remainder(nNumberBigInt).compareTo(BigInteger.ZERO) == 0 && b.remainder(nNumberBigInt).compareTo(BigInteger.ZERO) == 0) {
+                            nNumber.score += 2;
+                            a = a.divide(nNumberBigInt);
+                            b = b.divide(nNumberBigInt);
+                        }
+                        else if (a.remainder(nNumberBigInt).compareTo(BigInteger.ZERO) == 0 && b.remainder(nNumberBigInt).compareTo(BigInteger.ZERO) != 0) {
+                            nNumber.score += 1;
+                            a = a.divide(nNumberBigInt);
+                        }
+                        else if (b.remainder(nNumberBigInt).compareTo(BigInteger.ZERO) == 0 && a.remainder(nNumberBigInt).compareTo(BigInteger.ZERO) != 0) {
+                            nNumber.score += 1;
+                            b = b.divide(nNumberBigInt);
+                        }
+                        else {
+                            a = gcdProblem.a;
+                            b = gcdProblem.b;
+                            break;
+                        }
+                    }
+                }
             }
 
-            for (nNumber num : nNumbers) {
-                outputFile.println(num.getNumber() + " " + num.getScore());
+            for (nNumber num : nNumberz) {
+                outputFile.println(num.number + " " + num.score);
             }
 
             outputFile.close();
+
+            end = System.currentTimeMillis();
+
+            System.out.println(end - start + " milliseconds");
+
 
         }
 
@@ -120,47 +115,16 @@ public class Main {
             nNumberBigInt = new BigInteger(stringNumber);
         }
 
-        public int getNumber() {
-            return number;
-        }
-
-        public int getScore() {
-            return score;
-        }
-
-        public BigInteger getnNumberBigInt() {
-            return nNumberBigInt;
-        }
-
-        public void addScore(int number) {
-            if (!reachedEuclidian) {
-                score += number;
-            }
-        }
     }
 
     static class GCD {
-
-        private BigInteger a;
-        private BigInteger b;
+        BigInteger a;
+        BigInteger b;
 
         public GCD(BigInteger a, BigInteger b) {
             this.a = a;
             this.b = b;
         }
-
-        public BigInteger getA() {
-            return a;
-        }
-
-        public BigInteger getB() {
-            return b;
-        }
-
-        @Override
-        public String toString() {
-            return a + "/" + b;
-        }
-
     }
+
 }
