@@ -1,7 +1,6 @@
 // Raymond An
 
 package Magnets;
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
@@ -11,7 +10,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            Scanner inputFile = new Scanner(new File("MagnetExamples/input5.txt"));
+            Scanner inputFile = new Scanner(new File("MagnetExamples/input.txt"));
 
             PrintWriter outputFile = new PrintWriter(new FileWriter("output.txt"));
 
@@ -185,7 +184,13 @@ public class Main {
                         int leftNeighbor = locationOfAdjacentStars.get(i) - 1;
                         int rightNeighbor = locationOfAdjacentStars.get(i) + 1;
                         int current = locationOfAdjacentStars.get(i);
-                        if (firstLine.get(leftNeighbor).equals(positive) ||
+                        if (firstLine.get(leftNeighbor).equals(positive) && firstLine.get(rightNeighbor).equals(negative) ||
+                                firstLine.get(leftNeighbor).equals(negative) && firstLine.get(rightNeighbor).equals(positive) ||
+                                secondLine.get(leftNeighbor).equals(positive) && secondLine.get(rightNeighbor).equals(negative) ||
+                                secondLine.get(leftNeighbor).equals(negative) && secondLine.get(rightNeighbor).equals(positive)) {
+                            continue;
+                        }
+                        else if (firstLine.get(leftNeighbor).equals(positive) ||
                                 firstLine.get(rightNeighbor).equals(positive)) {
                             System.out.println("a2");
                             System.out.println(firstLine.get(leftNeighbor) + " " + firstLine.get(current) + " " + firstLine.get(rightNeighbor));
@@ -344,7 +349,13 @@ public class Main {
                             int leftNeighbor = remainingLocationOfAdjacentStars.get(i) - 1;
                             int rightNeighbor = remainingLocationOfAdjacentStars.get(i) + 1;
                             int current = remainingLocationOfAdjacentStars.get(i);
-                            if (firstLine.get(leftNeighbor).equals(positive) ||
+                            if (firstLine.get(leftNeighbor).equals(positive) && firstLine.get(rightNeighbor).equals(negative) ||
+                                    firstLine.get(leftNeighbor).equals(negative) && firstLine.get(rightNeighbor).equals(positive) ||
+                                    secondLine.get(leftNeighbor).equals(positive) && secondLine.get(rightNeighbor).equals(negative) ||
+                                    secondLine.get(leftNeighbor).equals(negative) && secondLine.get(rightNeighbor).equals(positive)) {
+                                continue;
+                            }
+                            else if (firstLine.get(leftNeighbor).equals(positive) ||
                                     firstLine.get(rightNeighbor).equals(positive)) {
                                 System.out.println("i");
                                 System.out.println(firstLine.get(leftNeighbor) + " " + firstLine.get(current) + " " + firstLine.get(rightNeighbor));
