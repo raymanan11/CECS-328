@@ -76,6 +76,7 @@ public class Main {
             System.out.println();
             System.out.println("Number of magnets left to place: " + numMagnets);
             System.out.println("Arrays after setting opposite pole of magnet if there is already a positive or negative pole");
+            System.out.println();
             System.out.print("  ");
             for (int i = 0; i < arr.length; i++) {
                 System.out.print(i + " ");
@@ -221,8 +222,8 @@ public class Main {
                                 secondLine.get(rightNeighbor).equals(negative)) && firstLine.get(current).equals(star)) {
                             System.out.println("d2");
                             System.out.println(secondLine.get(leftNeighbor) + " " + secondLine.get(current) + " " + secondLine.get(rightNeighbor));
-                            secondLine.set(locationOfAdjacentStars.get(i), positive);
-                            firstLine.set(locationOfAdjacentStars.get(i), negative);
+                            secondLine.set(current, positive);
+                            firstLine.set(current, negative);
                             numMagnets -= 1;
                             System.out.println("1 " + current + " 0 " + current);
                             outputFile.println("1 " + current + " 0 " + current);
@@ -235,11 +236,12 @@ public class Main {
                 }
             }
 
-            // these are the indexes that need to be removed from locationOfAdjacentStars
             System.out.println("Indexes to be removed: " + indexesToBeRemoved);
             System.out.println("Location of adjacent stars:" + locationOfAdjacentStars);
             System.out.println();
-            // method to remove those indexes from locationOfAdjacentStars
+            // remove indexes of stars that have already been placed in previous for loop so that the remaining
+            // stars can be updated and can be checked again with updated star locations of we still need to place
+            // more magnets
             ArrayList<Integer> remainingLocationOfAdjacentStars = new ArrayList<>();
             for (int i = 0; i < locationOfAdjacentStars.size(); i++) {
                 boolean inArray = false;
@@ -309,8 +311,8 @@ public class Main {
                                 firstLine.set(current, negative);
                                 secondLine.set(current, positive);
                                 System.out.println("e");
-                                System.out.println("0 " + current + " 1 " + current);
-                                outputFile.println("0 " + current + " 1 " + current);
+                                System.out.println("1 " + current + " 0 " + current);
+                                outputFile.println("1 " + current + " 0 " + current);
                                 numMagnets -= 1;
                             }
                             else if (firstLine.get(leftNeighbor).equals(negative)) {
@@ -333,8 +335,8 @@ public class Main {
                                 firstLine.set(current, negative);
                                 secondLine.set(current, positive);
                                 System.out.println("h");
-                                System.out.println("0 " + current + " 1 " + current);
-                                outputFile.println("0 " + current + " 1 " + current);
+                                System.out.println("1 " + current + " 0 " + current);
+                                outputFile.println("1 " + current + " 0 " + current);
                                 numMagnets -= 1;
                             }
                         }
@@ -374,8 +376,8 @@ public class Main {
                                     secondLine.get(rightNeighbor).equals(negative)) && firstLine.get(current).equals(star)) {
                                 System.out.println("l");
                                 System.out.println(secondLine.get(leftNeighbor) + " " + secondLine.get(current) + " " + secondLine.get(rightNeighbor));
-                                secondLine.set(remainingLocationOfAdjacentStars.get(i), positive);
-                                firstLine.set(remainingLocationOfAdjacentStars.get(i), negative);
+                                secondLine.set(current, positive);
+                                firstLine.set(current, negative);
                                 numMagnets -= 1;
                                 System.out.println("1 " + current + " 0 " + current);
                                 outputFile.println("1 " + current + " 0 " + current);
@@ -390,6 +392,7 @@ public class Main {
 
             System.out.println("Final arrays");
             System.out.println("Number of magnets left to place: " + numMagnets);
+            System.out.println();
             System.out.print("  ");
             for (int i = 0; i < arr.length; i++) {
                 System.out.print(i + " ");
