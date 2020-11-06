@@ -47,26 +47,22 @@ public class Main {
 
             Map<Integer, Vertex> vertexes = new HashMap<>();
 
-            System.out.println(mazes.get(0).length());
             for (int numChar = 0; numChar < mazes.get(0).length(); numChar++) {
                 int vertexNumber = numChar / 4 + 1;
                 int direction = numChar % 4;
-                int neighborVertex = 0;
-                if (direction == 0 || direction == 1) {
-                    neighborVertex = (direction == 0) ? vertexNumber - n: vertexNumber + n;
-                }
-                else if (direction == 2 || direction == 3) {
-                    neighborVertex = (direction == 2) ? vertexNumber - 1: vertexNumber + 1;
-                }
+                int neighborVertex;
                 if (mazes.get(0).charAt(numChar) == '0') {
-                    System.out.print(vertexNumber + " ");
-                    System.out.print(numChar + " ");
-                    if (!vertexes.containsKey(vertexNumber)) {
-                        vertexes.put(vertexNumber, new Vertex());
+                    if (direction == 0 || direction == 1) {
+                        neighborVertex = (direction == 0) ? vertexNumber - n: vertexNumber + n;
                     }
                     else {
-                        vertexes.get(vertexNumber).edges.add(neighborVertex);
+                        neighborVertex = (direction == 2) ? vertexNumber - 1: vertexNumber + 1;
                     }
+                    if (!vertexes.containsKey(vertexNumber)) {
+                        System.out.print(numChar + " ");
+                        vertexes.put(vertexNumber, new Vertex());
+                    }
+                    vertexes.get(vertexNumber).edges.add(neighborVertex);
                 }
             }
 
