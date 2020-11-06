@@ -1,6 +1,9 @@
 package MazeSimilarity;
 import java.io.File;
 import java.io.IOException;
+import java.util.ArrayList;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Scanner;
 import java.io.*;
 
@@ -20,21 +23,56 @@ public class Main {
             System.out.println("Number of mazes: " + numMazes);
             System.out.println("n: " + n);
             int i = 0;
+            int j = 0;
             String maze = "";
+
+            ArrayList<String> mazes = new ArrayList<>();
 
             while (i < numMazes) {
                 String s = inputFile.nextLine();
 
                 if (!s.equals("")) {
-                    maze = maze.concat("\n" + s);
+                    maze = maze.concat(s);
+                    // split the string every four places by using for loop
+                    // j++
                 }
                 else {
                     System.out.println(maze);
-                    // do something with the maze
+                    mazes.add(maze);
                     maze = "";
                     i++;
+                    //j = 0;
                 }
             }
+
+            Map<Integer, Vertex> vertexes = new HashMap<>();
+
+            System.out.println(mazes.get(0).length());
+            for (int numChar = 0; numChar < mazes.get(0).length(); numChar++) {
+                int vertexNumber = numChar / 4 + 1;
+                int direction = numChar % 4;
+                int neighborVertex = 0;
+                if (direction == 0 || direction == 1) {
+                    neighborVertex = (direction == 0) ? vertexNumber - n: vertexNumber + n;
+                }
+                else if (direction == 2 || direction == 3) {
+                    neighborVertex = (direction == 2) ? vertexNumber - 1: vertexNumber + 1;
+                }
+                if (mazes.get(0).charAt(numChar) == '0') {
+                    System.out.print(vertexNumber + " ");
+                    System.out.print(numChar + " ");
+                    if (!vertexes.containsKey(vertexNumber)) {
+                        vertexes.put(vertexNumber, new Vertex());
+                    }
+                    else {
+                        vertexes.get(vertexNumber).edges.add(neighborVertex);
+                    }
+                }
+            }
+
+            System.out.println();
+            System.out.println(vertexes);
+
         }
         catch  (IOException excpt) {
             System.out.println("File not found!");
