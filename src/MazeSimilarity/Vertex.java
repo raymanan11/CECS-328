@@ -8,14 +8,14 @@ public class Vertex {
     String color;
     int discoveredTime;
     int finishedTime;
-    Vertex previous;
+    int previous;
 
     public Vertex() {
         edges = new ArrayList<>();
         color = "white";
         discoveredTime = 0;
         finishedTime = 0;
-        previous = null;
+        previous = 0;
     }
 
     @Override
