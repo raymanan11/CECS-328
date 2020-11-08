@@ -16,6 +16,12 @@ public class Main {
     private static ArrayList<String> mazePaths = new ArrayList<>();
     private static String path = "";
 
+    private static String[][] b;
+    private static int[][] c;
+    private static String upAndLeft = "up&left";
+    private static String up = "up";
+    private static String left = "left";
+
     private static void DFS(Map<Integer, Vertex> vertexes) {
         time = 0;
         for (Map.Entry<Integer, Vertex> vertex : vertexes.entrySet()) {
@@ -35,22 +41,16 @@ public class Main {
         for (int edge : u.edges) {
             if (vertexes.get(edge).color.equals(white)) {
                 tempEdge = edge;
-                // System.out.println(edge + " - " + currentVertexNumber);
                 String direction = getStringDirection(currentVertexNumber, edge);
-//                System.out.print(direction);
                 path = path.concat(direction);
-                // System.out.println();
                 vertexes.get(edge).previous = currentVertexNumber;
                 DFSVisit(vertexes, vertexes.get(edge), edge);
             }
         }
-        // System.out.println(u.previous + " - " + tempEdge + " s");
         String d = getStringDirection(tempEdge, u.previous);
         if (u.previous != 0) {
-//            System.out.print(d);
             path = path.concat(d);
         }
-        // System.out.println();
         tempEdge = u.previous;
         u.color = black;
         time = time + 1;
@@ -67,10 +67,51 @@ public class Main {
         return direction;
     }
 
+    private static void LCSLength(String x, String y) {
+        int m = x.length();
+        int n = y.length();
+
+        // only use 1-5 (5 count)
+        b = new String[m + 1][n + 1];
+        c = new int[m + 1][n + 1];
+
+        for (int i = 1; i <= m; i++) c[i][0] = 0;
+        for (int j = 0; j <= n; j++) c[0][j] = 0;
+
+        for (int i = 1; i <= m; i++) {
+            for (int j = 1; j <= n; j++) {
+                if (x.charAt(i - 1) == y.charAt(j - 1)) {
+                    c[i][j] = c[i - 1][j - 1] + 1;
+                    b[i][j] = upAndLeft;
+                }
+                else if (c[i-1][j] >= c[i][j-1]) {
+                    c[i][j] = c[i - 1][j];
+                    b[i][j] = up;
+                }
+                else {
+                    c[i][j] = c[i][j - 1];
+                    b[i][j] = left;
+                }
+            }
+        }
+    }
+
+    private static void printLCS(String[][] b, String x, int i, int j) {
+        if (i == 0 || j == 0) return;
+        if (b[i][j].equals(upAndLeft)) {
+            printLCS(b, x, i - 1, j - 1);
+            System.out.print(x.charAt(i - 1));
+        }
+        else if (b[i][j].equals(up)) {
+            printLCS(b, x, i - 1, j);
+        }
+        else printLCS(b, x, i, j-1);
+    }
+
     public static void main(String[] args) {
 
         try {
-            Scanner inputFile = new Scanner(new File("MazeSamples/inputTest.txt"));
+            Scanner inputFile = new Scanner(new File("MazeSamples/input.txt"));
 
             PrintWriter outputFile = new PrintWriter(new FileWriter("output.txt"));
 
@@ -114,13 +155,14 @@ public class Main {
                     }
                 }
 
-//            System.out.println(vertexes);
                 DFS(vertexes);
                 mazePaths.add(path);
                 path = "";
             }
 
             System.out.println(mazePaths);
+            LCSLength(mazePaths.get(0), mazePaths.get(1));
+            printLCS(b, mazePaths.get(0), mazePaths.get(0).length(), mazePaths.get(1).length());
 
         }
         catch (IOException excpt) {
