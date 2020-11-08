@@ -23,7 +23,6 @@ public class Main {
         for (Map.Entry<Integer, Vertex> vertex : vertexes.entrySet()) {
             Vertex currentVertex = vertex.getValue();
             if (currentVertex.color.equals(white)) {
-//                System.out.println(vertex.getKey());
                 DFSVisit(vertexes, currentVertex, vertex.getKey());
             }
         }
@@ -36,40 +35,30 @@ public class Main {
         for (int edge : u.edges) {
             if (vertexes.get(edge).color.equals(white)) {
                 tempEdge = edge;
-//                System.out.println("temp edge: "+ tempEdge);
-                String direction;
-//                System.out.println(edge + " - " + currentVertexNumber);
-                if (Math.abs(edge - currentVertexNumber) > 1) {
-                    direction = (edge - currentVertexNumber == -4) ? "N": "S";
-                }
-                else {
-                    direction = (edge - currentVertexNumber == -1) ? "W": "E";
-                }
+                String direction = getStringDirection(currentVertexNumber, edge);
                 System.out.print(direction + " ");
-//                System.out.println();
-
-//                System.out.print(edge + " ");
                 vertexes.get(edge).previous = currentVertexNumber;
                 DFSVisit(vertexes, vertexes.get(edge), edge);
             }
         }
-//        System.out.println(u.previous + " - " + tempEdge + " s");
-        String d;
-        if (Math.abs(u.previous - tempEdge) > 1) {
-            d = (u.previous - tempEdge == -4) ? "N": "S";
-        }
-        else {
-            d = (u.previous - tempEdge == -1) ? "W": "E";
-        }
+        String d = getStringDirection(tempEdge, u.previous);
         if (u.previous != 0) {
             System.out.print(d + " ");
         }
         tempEdge = u.previous;
-//        System.out.println();
-//        System.out.print(u.previous + " ");
         u.color = black;
         time = time + 1;
         u.finishedTime = time;
+    }
+
+    private static String getStringDirection(int currentVertexNumber, int edge) {
+        String direction;
+        if (Math.abs(edge - currentVertexNumber) > 1) {
+            direction = (edge - currentVertexNumber == -4) ? "N" : "S";
+        } else {
+            direction = (edge - currentVertexNumber == -1) ? "W" : "E";
+        }
+        return direction;
     }
 
     public static void main(String[] args) {
