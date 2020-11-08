@@ -16,13 +16,14 @@ public class Main {
     private static int north = 0;
     private static int south = 1;
     private static int west = 2;
+    private static int tempEdge = 0;
 
     private static void DFS(Map<Integer, Vertex> vertexes) {
         time = 0;
         for (Map.Entry<Integer, Vertex> vertex : vertexes.entrySet()) {
             Vertex currentVertex = vertex.getValue();
             if (currentVertex.color.equals(white)) {
-                System.out.println(vertex.getKey());
+//                System.out.println(vertex.getKey());
                 DFSVisit(vertexes, currentVertex, vertex.getKey());
             }
         }
@@ -34,12 +35,38 @@ public class Main {
         u.color = gray;
         for (int edge : u.edges) {
             if (vertexes.get(edge).color.equals(white)) {
-                System.out.println(edge);
+                tempEdge = edge;
+//                System.out.println("temp edge: "+ tempEdge);
+                String direction;
+//                System.out.println(edge + " - " + currentVertexNumber);
+                if (Math.abs(edge - currentVertexNumber) > 1) {
+                    direction = (edge - currentVertexNumber == -4) ? "N": "S";
+                }
+                else {
+                    direction = (edge - currentVertexNumber == -1) ? "W": "E";
+                }
+                System.out.print(direction + " ");
+//                System.out.println();
+
+//                System.out.print(edge + " ");
                 vertexes.get(edge).previous = currentVertexNumber;
                 DFSVisit(vertexes, vertexes.get(edge), edge);
             }
         }
-        System.out.println(u.previous);
+//        System.out.println(u.previous + " - " + tempEdge + " s");
+        String d;
+        if (Math.abs(u.previous - tempEdge) > 1) {
+            d = (u.previous - tempEdge == -4) ? "N": "S";
+        }
+        else {
+            d = (u.previous - tempEdge == -1) ? "W": "E";
+        }
+        if (u.previous != 0) {
+            System.out.print(d + " ");
+        }
+        tempEdge = u.previous;
+//        System.out.println();
+//        System.out.print(u.previous + " ");
         u.color = black;
         time = time + 1;
         u.finishedTime = time;
@@ -111,9 +138,13 @@ public class Main {
     private static int getNeighborVertex(int n, int vertexNumber, int direction) {
         int neighborVertex;
         if (direction == north || direction == south) {
+//            String d = (direction == 0) ? "North": "South";
+//            System.out.println(d);
             neighborVertex = (direction == 0) ? vertexNumber - n: vertexNumber + n;
         }
         else {
+//            String d = (direction == 2) ? "West": "East";
+//            System.out.println(d);
             neighborVertex = (direction == west) ? vertexNumber - 1: vertexNumber + 1;
         }
         return neighborVertex;
