@@ -161,8 +161,14 @@ public class Main {
             }
 
             System.out.println(mazePaths);
-            LCSLength(mazePaths.get(0), mazePaths.get(1));
-            printLCS(b, mazePaths.get(0), mazePaths.get(0).length(), mazePaths.get(1).length());
+            for (int j = 0; j < numMazes - 1; j++) {
+                for (int k = j + 1; k < numMazes; k++) {
+                    LCSLength(mazePaths.get(j), mazePaths.get(k));
+                    System.out.println("Mazes: " + j + " " + k);
+                    printLCS(b, mazePaths.get(j), mazePaths.get(j).length(), mazePaths.get(k).length());
+                    System.out.println();
+                }
+            }
 
         }
         catch (IOException excpt) {
