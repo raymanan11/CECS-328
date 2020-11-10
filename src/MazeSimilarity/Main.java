@@ -17,12 +17,8 @@ public class Main {
     private static int tempEdge = 0;
     private static ArrayList<String> mazePaths = new ArrayList<>();
     private static String path = "";
-
-    private static String[][] b;
+    
     private static int[][] c;
-    private static String upAndLeft = "up&left";
-    private static String up = "up";
-    private static String left = "left";
     private static Map<Integer, String> mazeCombos = new HashMap<>();
     private static String LCS = "";
 
@@ -76,7 +72,6 @@ public class Main {
         int n = y.length();
 
         // only use 1-5 (5 count)
-        b = new String[m + 1][n + 1];
         c = new int[m + 1][n + 1];
 
         for (int i = 1; i <= m; i++) c[i][0] = 0;
@@ -86,39 +81,33 @@ public class Main {
             for (int j = 1; j <= n; j++) {
                 if (x.charAt(i - 1) == y.charAt(j - 1)) {
                     c[i][j] = c[i - 1][j - 1] + 1;
-                    b[i][j] = upAndLeft;
                 }
                 else if (c[i-1][j] >= c[i][j-1]) {
                     c[i][j] = c[i - 1][j];
-                    b[i][j] = up;
                 }
                 else {
                     c[i][j] = c[i][j - 1];
-                    b[i][j] = left;
                 }
             }
         }
     }
 
-    private static void printLCS(String[][] b, String x, int i, int j) {
+    private static void printLCS(int[][] c, String x, String y, int i, int j) {
         if (i == 0 || j == 0) return;
-        if (b[i][j].equals(upAndLeft)) {
-            printLCS(b, x, i - 1, j - 1);
-//            System.out.print(x.charAt(i - 1));
+        if (x.charAt(i - 1) == y.charAt(j - 1)) {
+            printLCS(c, x, y, i - 1, j - 1);
             LCS = LCS.concat(String.valueOf(x.charAt(i-1)));
         }
-        else if (b[i][j].equals(up)) {
-            printLCS(b, x, i - 1, j);
+        else if (c[i - 1][j] >= c[i][j - 1]) {
+            printLCS(c, x, y, i - 1, j);
         }
-        else printLCS(b, x, i, j - 1);
-
-
+        else printLCS(c, x, y, i, j - 1);
     }
 
     public static void main(String[] args) {
 
         try {
-            Scanner inputFile = new Scanner(new File("MazeSamples/input.txt"));
+            Scanner inputFile = new Scanner(new File("MazeSamples/inputTest.txt"));
 
             PrintWriter outputFile = new PrintWriter(new FileWriter("output.txt"));
 
@@ -165,12 +154,28 @@ public class Main {
                 path = "";
             }
 
-            for (int j = 0; j < numMazes - 1; j++) {
-                for (int k = j + 1; k < numMazes; k++) {
+//            for (int j = 0; j < numMazes - 1; j++) {
+//                for (int k = j + 1; k < numMazes; k++) {
+//                    LCSLength(mazePaths.get(j), mazePaths.get(k));
+//                    printLCS(b, mazePaths.get(j), mazePaths.get(j).length(), mazePaths.get(k).length());
+//                    mazeCombos.put(LCS.length(), j + " " + k);
+//                    LCS = "";
+//                }
+//            }
+
+            int j = 0;
+            int k = j + 1;
+            while (j < numMazes - 1) {
+                if (k < numMazes) {
                     LCSLength(mazePaths.get(j), mazePaths.get(k));
-                    printLCS(b, mazePaths.get(j), mazePaths.get(j).length(), mazePaths.get(k).length());
+                    printLCS(c, mazePaths.get(j), mazePaths.get(k), mazePaths.get(j).length(), mazePaths.get(k).length());
                     mazeCombos.put(LCS.length(), j + " " + k);
                     LCS = "";
+                    k++;
+                }
+                else {
+                    j++;
+                    k = j + 1;
                 }
             }
 
@@ -181,6 +186,7 @@ public class Main {
                 }
             }
 
+            System.out.println(mazeCombos.get(leastCommon));
             outputFile.println(mazeCombos.get(leastCommon));
             outputFile.close();
 
