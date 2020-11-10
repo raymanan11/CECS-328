@@ -1,3 +1,5 @@
+// Raymond An
+
 package MazeSimilarity;
 import java.io.File;
 import java.io.IOException;
@@ -21,6 +23,8 @@ public class Main {
     private static String upAndLeft = "up&left";
     private static String up = "up";
     private static String left = "left";
+    private static Map<Integer, String> mazeCombos = new HashMap<>();
+    private static String LCS = "";
 
     private static void DFS(Map<Integer, Vertex> vertexes) {
         time = 0;
@@ -100,12 +104,15 @@ public class Main {
         if (i == 0 || j == 0) return;
         if (b[i][j].equals(upAndLeft)) {
             printLCS(b, x, i - 1, j - 1);
-            System.out.print(x.charAt(i - 1));
+//            System.out.print(x.charAt(i - 1));
+            LCS = LCS.concat(String.valueOf(x.charAt(i-1)));
         }
         else if (b[i][j].equals(up)) {
             printLCS(b, x, i - 1, j);
         }
-        else printLCS(b, x, i, j-1);
+        else printLCS(b, x, i, j - 1);
+
+
     }
 
     public static void main(String[] args) {
@@ -120,8 +127,6 @@ public class Main {
             n = inputFile.nextInt();
             inputFile.nextLine();
 
-            System.out.println("Number of mazes: " + numMazes);
-            System.out.println("n: " + n);
             int i = 0;
             String maze = "";
 
@@ -160,15 +165,24 @@ public class Main {
                 path = "";
             }
 
-            System.out.println(mazePaths);
             for (int j = 0; j < numMazes - 1; j++) {
                 for (int k = j + 1; k < numMazes; k++) {
                     LCSLength(mazePaths.get(j), mazePaths.get(k));
-                    System.out.println("Mazes: " + j + " " + k);
                     printLCS(b, mazePaths.get(j), mazePaths.get(j).length(), mazePaths.get(k).length());
-                    System.out.println();
+                    mazeCombos.put(LCS.length(), j + " " + k);
+                    LCS = "";
                 }
             }
+
+            int leastCommon = Integer.MAX_VALUE;
+            for (Map.Entry<Integer, String> mazeCombo : mazeCombos.entrySet()) {
+                if (mazeCombo.getKey() < leastCommon) {
+                    leastCommon = mazeCombo.getKey();
+                }
+            }
+
+            outputFile.println(mazeCombos.get(leastCommon));
+            outputFile.close();
 
         }
         catch (IOException excpt) {
