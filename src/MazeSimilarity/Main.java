@@ -17,10 +17,11 @@ public class Main {
     private static int tempEdge = 0;
     private static ArrayList<String> mazePaths = new ArrayList<>();
     private static String path = "";
-    
+
     private static int[][] c;
     private static Map<Integer, String> mazeCombos = new HashMap<>();
     private static String LCS = "";
+    private static int count = 0;
 
     private static void DFS(Map<Integer, Vertex> vertexes) {
         time = 0;
@@ -96,7 +97,8 @@ public class Main {
         if (i == 0 || j == 0) return;
         if (x.charAt(i - 1) == y.charAt(j - 1)) {
             printLCS(c, x, y, i - 1, j - 1);
-            LCS = LCS.concat(String.valueOf(x.charAt(i-1)));
+//            LCS = LCS.concat(String.valueOf(x.charAt(i-1)));
+            count++;
         }
         else if (c[i - 1][j] >= c[i][j - 1]) {
             printLCS(c, x, y, i - 1, j);
@@ -136,8 +138,10 @@ public class Main {
             }
 
             Map<Integer, Vertex> vertexes;
+            // goes through each maze
             for (int j = 0; j < mazes.size(); j++) {
                 vertexes = new HashMap<>();
+                // goes through all characters of string maze
                 for (int numChar = 0; numChar < mazes.get(j).length(); numChar++) {
                     int vertexNumber = numChar / 4 + 1;
                     int direction = numChar % 4;
@@ -157,7 +161,8 @@ public class Main {
 //            for (int j = 0; j < numMazes - 1; j++) {
 //                for (int k = j + 1; k < numMazes; k++) {
 //                    LCSLength(mazePaths.get(j), mazePaths.get(k));
-//                    printLCS(b, mazePaths.get(j), mazePaths.get(j).length(), mazePaths.get(k).length());
+//                    printLCS(c, mazePaths.get(j), mazePaths.get(k), mazePaths.get(j).length(), mazePaths.get(k).length());
+//                    System.out.println(LCS);
 //                    mazeCombos.put(LCS.length(), j + " " + k);
 //                    LCS = "";
 //                }
@@ -165,12 +170,16 @@ public class Main {
 
             int j = 0;
             int k = j + 1;
+            
             while (j < numMazes - 1) {
                 if (k < numMazes) {
                     LCSLength(mazePaths.get(j), mazePaths.get(k));
                     printLCS(c, mazePaths.get(j), mazePaths.get(k), mazePaths.get(j).length(), mazePaths.get(k).length());
+//                    System.out.println(LCS);
+                    System.out.println(count);
                     mazeCombos.put(LCS.length(), j + " " + k);
-                    LCS = "";
+                    count = 0;
+//                    LCS = "";
                     k++;
                 }
                 else {
