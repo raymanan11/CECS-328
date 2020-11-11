@@ -1,6 +1,6 @@
 // Raymond An
 
- package MazeSimilarity;
+package MazeSimilarity;
 
 import java.util.ArrayList;
 

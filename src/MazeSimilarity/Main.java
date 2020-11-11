@@ -23,7 +23,6 @@ public class Main {
     private static int count = 0;
     private static String x = "";
     private static String y = "";
-    private static int currentVertex = 0;
     private static int i = 0;
     private static int j = 0;
 
@@ -101,7 +100,6 @@ public class Main {
     private static void printLCS(int[][] c) {
         while (i != 0 && j != 0) {
             if (x.charAt(i - 1) == y.charAt(j - 1)) {
-                currentVertex -=1;
                 i -= 1;
                 j -= 1;
                 count++;
@@ -197,7 +195,6 @@ public class Main {
                     Main.i = x.length();
                     Main.j = y.length();
                     LCSLength(x, y);
-                    currentVertex = c[Main.i][Main.j];
                     printLCS(c);
                     // add to map the length of LCS and the corresponding mazes
                     if (!mazeCombos.containsKey(count)) mazeCombos.put(count, j + " " + k);
