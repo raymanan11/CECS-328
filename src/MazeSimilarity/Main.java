@@ -23,6 +23,7 @@ public class Main {
     private static int count = 0;
     private static String x = "";
     private static String y = "";
+    private static int currentVertex = 0;
     private static int i = 0;
     private static int j = 0;
 
@@ -100,7 +101,7 @@ public class Main {
     private static void printLCS(int[][] c) {
         while (i != 0 && j != 0) {
             if (x.charAt(i - 1) == y.charAt(j - 1)) {
-                n -=1;
+                currentVertex -=1;
                 i -= 1;
                 j -= 1;
                 count++;
@@ -110,10 +111,27 @@ public class Main {
         }
     }
 
+    private static int getNeighborVertex(int n, int vertexNumber, int direction) {
+        int north = 0;
+        int south = 1;
+        int west = 2;
+        int neighborVertex;
+        // north or south
+        if (direction == north || direction == south) {
+            // subtract / add vertex # by n to get north / south
+            neighborVertex = (direction == north) ? vertexNumber - n: vertexNumber + n;
+        }
+        else {
+            // subtract / add vertex # by 1 to get north / south
+            neighborVertex = (direction == west) ? vertexNumber - 1: vertexNumber + 1;
+        }
+        return neighborVertex;
+    }
+
     public static void main(String[] args) {
 
         try {
-            Scanner inputFile = new Scanner(new File("MazeSamples/input.txt"));
+            Scanner inputFile = new Scanner(new File("MazeSamples/inputTest.txt"));
 
             PrintWriter outputFile = new PrintWriter(new FileWriter("output.txt"));
 
@@ -179,6 +197,7 @@ public class Main {
                     Main.i = x.length();
                     Main.j = y.length();
                     LCSLength(x, y);
+                    currentVertex = c[Main.i][Main.j];
                     printLCS(c);
                     // add to map the length of LCS and the corresponding mazes
                     if (!mazeCombos.containsKey(count)) mazeCombos.put(count, j + " " + k);
@@ -207,22 +226,5 @@ public class Main {
             System.out.println("File not found!");
         }
 
-    }
-
-    private static int getNeighborVertex(int n, int vertexNumber, int direction) {
-        int north = 0;
-        int south = 1;
-        int west = 2;
-        int neighborVertex;
-        // north or south
-        if (direction == north || direction == south) {
-            // subtract / add vertex # by n to get north / south
-            neighborVertex = (direction == north) ? vertexNumber - n: vertexNumber + n;
-        }
-        else {
-            // subtract / add vertex # by 1 to get north / south
-            neighborVertex = (direction == west) ? vertexNumber - 1: vertexNumber + 1;
-        }
-        return neighborVertex;
     }
 }
