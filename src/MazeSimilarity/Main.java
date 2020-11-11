@@ -20,7 +20,6 @@ public class Main {
 
     private static int[][] c;
     private static Map<Integer, String> mazeCombos = new HashMap<>();
-    private static String LCS = "";
     private static int count = 0;
     private static String x = "";
     private static String y = "";
@@ -95,24 +94,19 @@ public class Main {
                 }
             }
         }
+
     }
 
     private static void printLCS(int[][] c) {
-        if (i == 0 || j == 0) return;
-        if (x.charAt(i - 1) == y.charAt(j - 1)) {
-            i -= 1;
-            j -= 1;
-            printLCS(c);
-//            LCS = LCS.concat(String.valueOf(x.charAt(i-1)));
-            count++;
-        }
-        else if (c[i - 1][j] >= c[i][j - 1]) {
-            i -= 1;
-            printLCS(c);
-        }
-        else {
-            j -= 1;
-            printLCS(c);
+        while (i != 0 && j != 0) {
+            if (x.charAt(i - 1) == y.charAt(j - 1)) {
+                n -=1;
+                i -= 1;
+                j -= 1;
+                count++;
+            }
+            else if (c[i - 1][j] >= c[i][j - 1]) i -= 1;
+            else j -= 1;
         }
     }
 
@@ -150,34 +144,32 @@ public class Main {
             Map<Integer, Vertex> vertexes;
             // goes through each maze
             for (int j = 0; j < mazes.size(); j++) {
+                // initialize new HashMap
                 vertexes = new HashMap<>();
                 // goes through all characters of string maze
                 for (int numChar = 0; numChar < mazes.get(j).length(); numChar++) {
+                    // determine which vertex that character is
                     int vertexNumber = numChar / 4 + 1;
-                    int direction = numChar % 4;
                     int neighborVertex;
                     if (mazes.get(j).charAt(numChar) == '0') {
+                        // determines the direction (0 = north, 1 = south, 2 = west, 3 = east
+                        int direction = numChar % 4;
+                        // get the integer neighbor
                         neighborVertex = getNeighborVertex(n, vertexNumber, direction);
+                        // if vertex is not in map, then add it to map and initialize new vertex
                         if (!vertexes.containsKey(vertexNumber)) vertexes.put(vertexNumber, new Vertex());
+                        // add the neighbor to the vertex's ArrayList of edges
                         vertexes.get(vertexNumber).edges.add(neighborVertex);
                     }
                 }
 
+                // depth first search those vertexes
                 DFS(vertexes);
                 mazePaths.add(path);
                 path = "";
             }
 
-//            for (int j = 0; j < numMazes - 1; j++) {
-//                for (int k = j + 1; k < numMazes; k++) {
-//                    LCSLength(mazePaths.get(j), mazePaths.get(k));
-//                    printLCS(c, mazePaths.get(j), mazePaths.get(k), mazePaths.get(j).length(), mazePaths.get(k).length());
-//                    System.out.println(LCS);
-//                    mazeCombos.put(LCS.length(), j + " " + k);
-//                    LCS = "";
-//                }
-//            }
-
+            // go through every maze combo and get the length of LCS between the two mazes
             int j = 0;
             int k = j + 1;
             while (j < numMazes - 1) {
@@ -188,8 +180,8 @@ public class Main {
                     Main.j = y.length();
                     LCSLength(x, y);
                     printLCS(c);
-                    System.out.println(count);
-                    mazeCombos.put(count, j + " " + k);
+                    // add to map the length of LCS and the corresponding mazes
+                    if (!mazeCombos.containsKey(count)) mazeCombos.put(count, j + " " + k);
                     count = 0;
                     k++;
                 }
@@ -200,13 +192,13 @@ public class Main {
             }
 
             int leastCommon = Integer.MAX_VALUE;
+            // search for the smallest number in the map = maze combo that is least similar
             for (Map.Entry<Integer, String> mazeCombo : mazeCombos.entrySet()) {
                 if (mazeCombo.getKey() < leastCommon) {
                     leastCommon = mazeCombo.getKey();
                 }
             }
 
-            System.out.println(mazeCombos.get(leastCommon));
             outputFile.println(mazeCombos.get(leastCommon));
             outputFile.close();
 
@@ -222,10 +214,13 @@ public class Main {
         int south = 1;
         int west = 2;
         int neighborVertex;
+        // north or south
         if (direction == north || direction == south) {
-            neighborVertex = (direction == 0) ? vertexNumber - n: vertexNumber + n;
+            // subtract / add vertex # by n to get north / south
+            neighborVertex = (direction == north) ? vertexNumber - n: vertexNumber + n;
         }
         else {
+            // subtract / add vertex # by 1 to get north / south
             neighborVertex = (direction == west) ? vertexNumber - 1: vertexNumber + 1;
         }
         return neighborVertex;
