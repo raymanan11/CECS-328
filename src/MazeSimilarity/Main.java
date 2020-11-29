@@ -129,7 +129,7 @@ public class Main {
     public static void main(String[] args) {
 
         try {
-            Scanner inputFile = new Scanner(new File("MazeSamples/inputTest.txt"));
+            Scanner inputFile = new Scanner(new File("MazeSamples/input.txt"));
 
             PrintWriter outputFile = new PrintWriter(new FileWriter("output.txt"));
 
