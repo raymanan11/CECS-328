@@ -44,7 +44,11 @@ public class Main {
     }
 
     private static boolean checkMaximal(ArrayList<BigInteger> numbers, int end, int i) {
-        for (int k = i + 1; k < end; k++) {
+//        System.out.println("Check Maximal");
+        for (int k = i + 1; k <= end; k++) {
+//            System.out.println(numbers.get(i));
+//            System.out.println(numbers.get(k));
+//            System.out.println();
             if (numbers.get(i).gcd(numbers.get(k)).intValue() > 1) {
                 return false;
             }
@@ -53,7 +57,11 @@ public class Main {
     }
 
     private static boolean checkMinimal(ArrayList<BigInteger> numbers, int begin, int i) {
+//        System.out.println("Check minimal");
         for (int j = begin; j < i; j++) {
+//            System.out.println(numbers.get(j));
+//            System.out.println(numbers.get(i));
+//            System.out.println();
             if (numbers.get(j).gcd(numbers.get(i)).intValue() > 1) {
                 return false;
             }
