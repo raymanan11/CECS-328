@@ -6,9 +6,9 @@ import java.util.ArrayList;
 public class Vertex {
 
     ArrayList<BigInteger> neighbors;
-    String color;
-    int discoveredTime;
-    BigInteger previous;
+    private String color;
+    private int discoveredTime;
+    private BigInteger previous;
 
     public Vertex() {
         neighbors = new ArrayList<>();
@@ -22,5 +22,10 @@ public class Vertex {
         color = "white";
         discoveredTime = -1;
         previous = null;
+    }
+
+    @Override
+    public String toString() {
+        return neighbors.toString();
     }
 }

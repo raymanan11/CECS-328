@@ -8,9 +8,16 @@ import java.math.BigInteger;
 import java.util.*;
 
 public class Main {
+
+    private static LinkedList<BigInteger> queue = new LinkedList<>();
+
+    public static void BFS(Map<BigInteger, Vertex> vertexes) {
+        
+    }
+
     public static void main(String[] args) {
         try {
-            Scanner inputFile = new Scanner(new File("HobbitExamples/inputTest.txt"));
+            Scanner inputFile = new Scanner(new File("HobbitExamples/input2.txt"));
 
             ArrayList<BigInteger> numbers = new ArrayList<>();
             ArrayList<BigInteger> minimalNumbers = new ArrayList<>();
@@ -22,8 +29,6 @@ public class Main {
             }
 
             Collections.sort(numbers);
-
-            // System.out.println(numbers);
 
             int begin = 0;
             int end = numbers.size() - 1;
@@ -55,24 +60,29 @@ public class Main {
                 vertexes.put(minimalNumbers.get(i), new Vertex());
                 // add neighbors from max
                 for (int j = 0; j < maximalNumbers.size(); j++) {
-                    if (minimalNumbers.get(i).gcd(maximalNumbers.get(j)).intValue() > 1) vertexes.get(minimalNumbers.get(i)).neighbors.add(maximalNumbers.get(j));
+                    if (minimalNumbers.get(i).gcd(maximalNumbers.get(j)).intValue() > 1 && maximalNumbers.get(j).compareTo(minimalNumbers.get(i)) > 0) vertexes.get(minimalNumbers.get(i)).neighbors.add(maximalNumbers.get(j));
                 }
                 // add neighbors from neither
                 for (int j = 0; j < neither.size(); j++) {
-                    if (minimalNumbers.get(i).gcd(neither.get(j)).intValue() > 1) vertexes.get(minimalNumbers.get(i)).neighbors.add(neither.get(j));
+                    if (minimalNumbers.get(i).gcd(neither.get(j)).intValue() > 1 && neither.get(j).compareTo(minimalNumbers.get(i)) > 0) vertexes.get(minimalNumbers.get(i)).neighbors.add(neither.get(j));
                 }
             }
 
             // add neighbors for each neither #
             for (int i = 0; i < neither.size(); i++) {
                 vertexes.put(neither.get(i), new Vertex());
+                for (int j = 0; j < neither.size(); j++) {
+                    if (!neither.get(i).equals(neither.get(j)) && neither.get(i).gcd(neither.get(j)).intValue() > 1 && neither.get(j).compareTo(neither.get(i)) > 0) { vertexes.get(neither.get(i)).neighbors.add(neither.get(j));
+
+                    }
+                }
                 // add neighbors from max
                 for (int j = 0; j < maximalNumbers.size(); j++) {
-                    if (neither.get(i).gcd(maximalNumbers.get(j)).intValue() > 1) vertexes.get(minimalNumbers.get(i)).neighbors.add(maximalNumbers.get(j));
+                    if (neither.get(i).gcd(maximalNumbers.get(j)).intValue() > 1 && maximalNumbers.get(j).compareTo(neither.get(i)) > 0) vertexes.get(neither.get(i)).neighbors.add(maximalNumbers.get(j));
                 }
             }
 
-
+            BFS(vertexes);
 
             PrintWriter outputFile = new PrintWriter(new FileWriter("output.txt"));
 
