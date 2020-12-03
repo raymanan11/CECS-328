@@ -6,9 +6,9 @@ import java.util.ArrayList;
 public class Vertex {
 
     ArrayList<BigInteger> neighbors;
-    private String color;
-    private int discoveredTime;
-    private BigInteger previous;
+    String color;
+    int discoveredTime;
+    BigInteger previous;
 
     public Vertex() {
         neighbors = new ArrayList<>();

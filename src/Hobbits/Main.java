@@ -12,7 +12,37 @@ public class Main {
     private static LinkedList<BigInteger> queue = new LinkedList<>();
 
     public static void BFS(Map<BigInteger, Vertex> vertexes) {
-        
+        queue.add(new BigInteger("1"));
+        while (!queue.isEmpty()) {
+            BigInteger u = queue.remove();
+            System.out.println(u);
+            Vertex currenVertex = vertexes.get(u);
+            for (BigInteger bigInteger : currenVertex.neighbors) {
+                Vertex neighbor = vertexes.get(bigInteger);
+                System.out.println("Neighbor of " + u + ": " + bigInteger);
+                if (neighbor.color.equals("white")) {
+                    neighbor.color = "gray";
+                    neighbor.discoveredTime = currenVertex.discoveredTime + 1;
+                    neighbor.previous = u;
+                    queue.add(bigInteger);
+                }
+            }
+            currenVertex.color = "black";
+        }
+    }
+
+    public static void printPath(Map<BigInteger, Vertex> vertexes, BigInteger v) {
+        BigInteger s = new BigInteger("1");
+        if (v.compareTo(s) == 0) {
+            System.out.print(s + " ");
+        }
+        else if (vertexes.get(v).previous == null) {
+            System.out.println("No path from s to v exists");
+        }
+        else {
+            printPath(vertexes, vertexes.get(v).previous);
+            System.out.print(v + " ");
+        }
     }
 
     public static void main(String[] args) {
@@ -82,7 +112,15 @@ public class Main {
                 }
             }
 
+            for (BigInteger maxNum : maximalNumbers) {
+                vertexes.put(maxNum, new Vertex());
+            }
+
+            System.out.println(vertexes);
             BFS(vertexes);
+            System.out.println();
+            printPath(vertexes, new BigInteger("15"));
+
 
             PrintWriter outputFile = new PrintWriter(new FileWriter("output.txt"));
 
