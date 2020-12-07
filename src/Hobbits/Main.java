@@ -20,20 +20,28 @@ public class Main {
     private static String path = "";
 
     public static void BFS(Map<BigInteger, Vertex> vertexes) {
+
         queue.add(new BigInteger("1"));
         while (!queue.isEmpty()) {
             BigInteger u = queue.remove();
 //            System.out.println(u);
             Vertex currenVertex = vertexes.get(u);
+//            System.out.println("Available neighbors for " + u + ": " + currenVertex.neighbors);
+//            System.out.println();
             for (BigInteger bigInteger : currenVertex.neighbors) {
                 Vertex neighbor = vertexes.get(bigInteger);
-//                System.out.println("Neighbor of " + u + ": " + bigInteger);
                 if (neighbor.color.equals("white")) {
                     neighbor.color = "gray";
                     neighbor.discoveredTime = currenVertex.discoveredTime + 1;
                     neighbor.previous = u;
+//                    System.out.println("Neighbor of " + u + ": " + bigInteger);
                     queue.add(bigInteger);
-                    if (maximalNumbers.contains(bigInteger) || neither.contains(bigInteger)) break;
+                    if (maximalNumbers.contains(bigInteger) || neither.contains(bigInteger)) {
+//                        if (maximalNumbers.contains(bigInteger)) System.out.println("Encountered maximal number: " + bigInteger);
+//                        if (neither.contains(bigInteger)) System.out.println("Encountered neither number: " + bigInteger);
+//                        System.out.println();
+                        break;
+                    }
                 }
             }
             currenVertex.color = "black";
@@ -62,7 +70,7 @@ public class Main {
 
     public static void main(String[] args) {
         try {
-            Scanner inputFile = new Scanner(new File("HobbitExamples/input3.txt"));
+            Scanner inputFile = new Scanner(new File("HobbitExamples/input.txt"));
 
             ArrayList<BigInteger> numbers = new ArrayList<>();
             ArrayList<BigInteger> minimalNumbers = new ArrayList<>();
@@ -78,7 +86,7 @@ public class Main {
             int begin = 0;
             int end = numbers.size() - 1;
             for (int i = 0; i < numbers.size(); i++) {
-                // System.out.println("NUmber being checked: " + numbers.get(i));
+                // System.out.println("Number being checked: " + numbers.get(i));
                 // check #'s before numbers.get(i)
                 boolean minimal = checkMinimal(numbers, begin, i);
                 // System.out.println("Minimal: " + minimal);
@@ -92,14 +100,20 @@ public class Main {
             }
 
 //            System.out.println("Miminal #'s: " + minimalNumbers);
-//            System.out.println("Maximal #'s: " +maximalNumbers);
-//            System.out.println("Neither: " +neither);
+//            System.out.println("Maximal #'s: " + maximalNumbers);
+//            System.out.println("Neither: " + neither);
 
             Map<BigInteger, Vertex> vertexes = new HashMap<>();
             PrintWriter outputFile = new PrintWriter(new FileWriter("output.txt"));
 
             // add all minimum numbers as places to go from pad 1
-            vertexes.put(new BigInteger("1"), new Vertex(minimalNumbers));
+            BigInteger start = new BigInteger("1");
+            vertexes.put(start, new Vertex(minimalNumbers));
+            Vertex startVertex = vertexes.get(start);
+            startVertex.color = "gray";
+            startVertex.discoveredTime = 0;
+            startVertex.previous = null;
+
 
             // add neighbors for each minimal #
             for (BigInteger minimalNumber : minimalNumbers) {
@@ -120,15 +134,16 @@ public class Main {
             for (BigInteger neitherNumber : neither) {
                 vertexes.put(neitherNumber, new Vertex());
 
+                // add neighbors from max
+                for (BigInteger maximalNumber : maximalNumbers) {
+                    if (neitherNumber.gcd(maximalNumber).intValue() > 1 && maximalNumber.compareTo(neitherNumber) > 0) vertexes.get(neitherNumber).neighbors.add(maximalNumber);
+                }
+
                 // add other neither neighbors
                 for (BigInteger neitherNum : neither) {
                     if (!neitherNumber.equals(neitherNum) && neitherNumber.gcd(neitherNum).intValue() > 1 && neitherNum.compareTo(neitherNumber) > 0) vertexes.get(neitherNumber).neighbors.add(neitherNum);
                 }
 
-                // add neighbors from max
-                for (BigInteger maximalNumber : maximalNumbers) {
-                    if (neitherNumber.gcd(maximalNumber).intValue() > 1 && maximalNumber.compareTo(neitherNumber) > 0) vertexes.get(neitherNumber).neighbors.add(maximalNumber);
-                }
             }
 
             // add maximal numbers as vertexes
@@ -143,7 +158,11 @@ public class Main {
             for(BigInteger maximalPad : maximalNumbers) {
                 printPath(vertexes, maximalPad);
                 String[] arr = path.split(" ");
-                if (arr.length > 1) outputFile.println(path);
+                if (arr.length > 1) {
+                    outputFile.println(path);
+//                    System.out.println(path);
+                }
+//                System.out.println("Path for " + maximalPad + ": " + path);
                 path = "";
             }
 
