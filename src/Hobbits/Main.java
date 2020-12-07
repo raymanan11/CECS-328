@@ -24,27 +24,18 @@ public class Main {
         queue.add(new BigInteger("1"));
         while (!queue.isEmpty()) {
             BigInteger u = queue.remove();
-//            System.out.println(u);
-            Vertex currenVertex = vertexes.get(u);
-//            System.out.println("Available neighbors for " + u + ": " + currenVertex.neighbors);
-//            System.out.println();
-            for (BigInteger bigInteger : currenVertex.neighbors) {
+            Vertex currentVertex = vertexes.get(u);
+            for (BigInteger bigInteger : currentVertex.neighbors) {
                 Vertex neighbor = vertexes.get(bigInteger);
                 if (neighbor.color.equals("white")) {
                     neighbor.color = "gray";
-                    neighbor.discoveredTime = currenVertex.discoveredTime + 1;
+                    neighbor.discoveredTime = currentVertex.discoveredTime + 1;
                     neighbor.previous = u;
-//                    System.out.println("Neighbor of " + u + ": " + bigInteger);
                     queue.add(bigInteger);
-                    if (maximalNumbers.contains(bigInteger) || neither.contains(bigInteger)) {
-//                        if (maximalNumbers.contains(bigInteger)) System.out.println("Encountered maximal number: " + bigInteger);
-//                        if (neither.contains(bigInteger)) System.out.println("Encountered neither number: " + bigInteger);
-//                        System.out.println();
-                        break;
-                    }
+                    if (maximalNumbers.contains(bigInteger) || neither.contains(bigInteger)) break;
                 }
             }
-            currenVertex.color = "black";
+            currentVertex.color = "black";
         }
     }
 
@@ -53,9 +44,7 @@ public class Main {
         if (v.compareTo(s) == 0) {
             path = path.concat(s + " ");
         }
-        else if (vertexes.get(v).previous == null) {
-//            System.out.print("null");
-        }
+        else if (vertexes.get(v).previous == null) { }
         else {
             printPath(vertexes, vertexes.get(v).previous);
             path = path.concat(v + " ");
@@ -86,22 +75,15 @@ public class Main {
             int begin = 0;
             int end = numbers.size() - 1;
             for (int i = 0; i < numbers.size(); i++) {
-                // System.out.println("Number being checked: " + numbers.get(i));
                 // check #'s before numbers.get(i)
                 boolean minimal = checkMinimal(numbers, begin, i);
-                // System.out.println("Minimal: " + minimal);
                 // check #'s after numbers.get(i)
                 boolean maximal = checkMaximal(numbers, end, i);
-                // System.out.println("Maximal: " + maximal);
                 if (minimal) minimalNumbers.add(numbers.get(i));
                 if (maximal) maximalNumbers.add(numbers.get(i));
                 if (!maximal && !minimal) neither.add(numbers.get(i));
 
             }
-
-//            System.out.println("Miminal #'s: " + minimalNumbers);
-//            System.out.println("Maximal #'s: " + maximalNumbers);
-//            System.out.println("Neither: " + neither);
 
             Map<BigInteger, Vertex> vertexes = new HashMap<>();
             PrintWriter outputFile = new PrintWriter(new FileWriter("output.txt"));
@@ -151,22 +133,16 @@ public class Main {
                 vertexes.put(maxNum, new Vertex());
             }
 
-//            System.out.println(vertexes);
             BFS(vertexes);
-//            System.out.println();
 
             for(BigInteger maximalPad : maximalNumbers) {
                 printPath(vertexes, maximalPad);
                 String[] arr = path.split(" ");
                 if (arr.length > 1) {
                     outputFile.println(path);
-//                    System.out.println(path);
                 }
-//                System.out.println("Path for " + maximalPad + ": " + path);
                 path = "";
             }
-
-//            System.out.println(repeatedNumbers);
 
             outputFile.close();
 
@@ -177,12 +153,7 @@ public class Main {
     }
 
     private static boolean checkMaximal(ArrayList<BigInteger> numbers, int end, int i) {
-        // System.out.println("Check Maximal");
         for (int k = i + 1; k <= end; k++) {
-//            System.out.println(numbers.get(i));
-//            System.out.println(numbers.get(k));
-//            System.out.println();
-//            System.out.println("GCD: " + numbers.get(i).gcd(numbers.get(k)).intValue());
             if (numbers.get(i).gcd(numbers.get(k)).intValue() > 1) {
                 return false;
             }
@@ -191,12 +162,7 @@ public class Main {
     }
 
     private static boolean checkMinimal(ArrayList<BigInteger> numbers, int begin, int i) {
-        // System.out.println("Check minimal");
         for (int j = begin; j < i; j++) {
-//            System.out.println(numbers.get(j));
-//            System.out.println(numbers.get(i));
-//            System.out.println();
-//            System.out.println("GCD: " + numbers.get(j).gcd(numbers.get(i)).intValue());
             if (numbers.get(j).gcd(numbers.get(i)).intValue() > 1) {
                 return false;
             }
